@@ -1,0 +1,4 @@
+-r ./main.txt
+django-extensions
+django-debug-toolbar
+ipython

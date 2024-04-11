@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  postgres:
+    env_file:
+      - ./envs/postgres.env
+
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODE: development
+    volumes:
+      - .:/code
+    ports:
+      - 8000:8000
+    environment:
+      MODE: development
+      LOGS_ROOT: /code/logs/development
+      LOG_LEVEL: INFO
