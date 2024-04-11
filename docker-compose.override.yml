@@ -11,6 +11,8 @@ services:
       dockerfile: Dockerfile
       args:
         MODE: development
+    env_file:
+      - ./envs/postgres.env
     volumes:
       - .:/code
     ports:

@@ -9,24 +9,29 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+import os
 
-from pathlib import Path
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+if not os.path.exists(os.path.join(BASE_DIR, 'secret_key.txt')):
+    from django.core.management.utils import get_random_secret_key
+    SECRET_KEY = get_random_secret_key()
+    with open(os.path.join(BASE_DIR, 'secret_key.txt'), 'w', encoding='utf-8') as f:
+        f.write(SECRET_KEY)
+
+with open(os.path.join(BASE_DIR, 'secret_key.txt'), 'r', encoding='utf-8') as f:
+    SECRET_KEY = f.read().strip()
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-auo-ma(qb^i1wwpa7_9!fb%@=el1zce+#1fvj@25$wu-q973%n'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
 
+APP_NAME = 'simple_workout_planner'
 
 # Application definition
 
@@ -75,9 +80,13 @@ WSGI_APPLICATION = 'simple_workout_planner.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('POSTGRES_DB'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'HOST': os.environ.get('POSTGRES_HOST'),
+        'PORT': os.environ.get('POSTGRES_PORT'),
+    },
 }
 
 
